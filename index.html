@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SETL110YM9"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-SETL110YM9');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONSPOT — 소상공인 웹사이트 전문 제작</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --bg:#080808;--surface:#0e0e0e;--card:#141414;
+  --border:rgba(255,255,255,.07);--text:#f0ece4;--muted:rgba(240,236,228,.44);
+  --accent:#d4f53c;--accent-glow:rgba(212,245,60,.22);
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* ── INTRO OVERLAY ── */
+#introOverlay{position:fixed;inset:0;z-index:9000;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity 1s ease;}
+#introOverlay.fade-out{opacity:0;pointer-events:none;}
+#shaderContainer{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;}
+#shaderContainer canvas{position:absolute!important;inset:0;width:100%!important;height:100%!important;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#introContent{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1.4rem;text-align:center;transition:opacity .5s ease;}
+#introContent.hide{opacity:0;pointer-events:none;}
+.intro-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,12vw,8rem);letter-spacing:.12em;color:var(--text);text-shadow:0 0 60px rgba(0,0,0,.9),0 2px 30px rgba(0,0,0,.7);}
+.intro-logo em{color:var(--accent);font-style:normal;}
+.intro-tag{font-size:.7rem;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,255,255,.5);}
+#introStart{margin-top:.4rem;padding:.55rem 2rem;background:transparent;border:1px solid rgba(212,245,60,.4);color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.28em;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+#introStart::before{content:'';position:absolute;inset:0;background:var(--accent);transform:translateX(-100%);transition:transform .32s ease;}
+#introStart:hover::before{transform:translateX(0);}
+#introStart:hover{color:#000;}
+#introStart span{position:relative;z-index:1;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:600;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2.8rem;background:rgba(8,8,8,.92);backdrop-filter:blur(28px);border-bottom:1px solid var(--border);opacity:0;pointer-events:none;transition:opacity .6s ease;}
+nav.show{opacity:1;pointer-events:auto;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:.1em;color:var(--text);text-decoration:none;}
+.logo em{color:var(--accent);font-style:normal;}
+.nav-links{display:flex;gap:2.4rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.74rem;letter-spacing:.06em;transition:color .22s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{padding:.52rem 1.5rem;background:var(--accent);color:#000;border-radius:3px;text-decoration:none;font-size:.72rem;font-weight:700;letter-spacing:.06em;transition:all .22s;}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 6px 22px var(--accent-glow);}
+
+/* ── HERO ── */
+.hero{position:relative;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 2.8rem 5.5rem;}
+#starCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;}
+.hero-content{position:relative;z-index:2;opacity:0;transition:opacity 1s ease;}
+.hero-content.show{opacity:1;}
+.hero-tag{font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:.8rem;margin-bottom:1.6rem;}
+.hero-tag::before{content:'';width:30px;height:1px;background:var(--accent);}
+h1.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,10.5vw,12.5rem);line-height:.9;letter-spacing:.008em;}
+.l1,.l2,.l3{display:block;color:var(--text);}
+.l4{display:block;font-family:'Playfair Display',serif;font-style:italic;color:var(--accent);font-size:clamp(2.6rem,7.5vw,9rem);letter-spacing:.03em;}
+.hero-sub{margin-top:2rem;max-width:460px;font-size:.88rem;line-height:1.8;color:var(--muted);}
+.hero-actions{margin-top:2.5rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;}
+.btn-fill{padding:.88rem 2.1rem;background:var(--accent);color:#000;border-radius:3px;text-decoration:none;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .22s;}
+.btn-fill:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow);}
+.btn-line{padding:.88rem 2.1rem;border:1px solid rgba(255,255,255,.2);color:var(--text);border-radius:3px;text-decoration:none;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;transition:all .22s;}
+.btn-line:hover{border-color:var(--accent);color:var(--accent);}
+.warp-hint{position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:.5rem;z-index:2;animation:hintPulse 2.5s ease-in-out infinite;opacity:0;transition:opacity 1s ease .5s;}
+.warp-hint.show{opacity:1;}
+@keyframes hintPulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+.warp-hint-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--accent),transparent);}
+
+/* ── TICKER ── */
+.ticker{overflow:hidden;padding:.95rem 0;background:var(--accent);}
+.ticker-inner{display:flex;width:max-content;animation:tick 30s linear infinite;}
+.tick-item{flex-shrink:0;padding:0 2.2rem;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.12em;color:#000;display:flex;align-items:center;gap:2rem;}
+.tick-item::after{content:'◆';font-size:.55em;opacity:.5;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── SECTION COMMON ── */
+.sec{padding:7.5rem 2.8rem;}
+.label{font-size:.58rem;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:.7rem;margin-bottom:1.2rem;}
+.label::before{content:'';width:24px;height:1px;background:var(--accent);}
+.heading{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,5.5vw,5.5rem);line-height:.95;margin-bottom:2rem;}
+.r{opacity:0;transform:translateY(30px);transition:opacity .75s ease,transform .75s ease;}
+.r.in{opacity:1;transform:none;}
+
+/* ── ABOUT ── */
+.about-layout{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;max-width:1240px;margin:0 auto;}
+.about-text p{font-size:.9rem;line-height:1.9;color:var(--muted);margin-bottom:1.1rem;}
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-top:2.5rem;}
+.pillar{padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:5px;transition:border-color .25s;}
+.pillar:hover{border-color:rgba(212,245,60,.35);}
+.pillar-icon{font-size:1.3rem;margin-bottom:.7rem;}
+.pillar-name{font-size:.76rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem;}
+.pillar-desc{font-size:.76rem;color:var(--muted);line-height:1.65;}
+.av{width:100%;aspect-ratio:9/11;background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;padding:3rem;position:relative;}
+.av-badge{position:absolute;top:1.5rem;right:1.5rem;background:var(--accent);color:#000;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .85rem;border-radius:20px;}
+.av-circle{width:128px;height:128px;border-radius:50%;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;animation:rp 3.5s ease-in-out infinite;}
+@keyframes rp{0%,100%{box-shadow:0 0 0 0 rgba(212,245,60,.28);}50%{box-shadow:0 0 0 22px rgba(212,245,60,0);}}
+.av-circle-in{width:86px;height:86px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.06em;color:#000;text-align:center;line-height:1.25;}
+.av-nums{display:flex;gap:2.5rem;}
+.av-num{text-align:center;}
+.av-n{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--accent);}
+.av-l{font-size:.62rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+
+/* ── STATS ── */
+.stats-sec{background:var(--surface);}
+.stats-sec-wrap{max-width:1240px;margin:0 auto;}
+.lbl{font-size:.58rem;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:.7rem;margin-bottom:1.2rem;}
+.lbl::before{content:'';width:24px;height:1px;background:var(--accent);}
+.sh{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5.5vw,5rem);line-height:.95;margin-bottom:2rem;}
+.stat-num-row{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-bottom:4rem;}
+.stat-item{padding:2.6rem 2rem;background:var(--card);border:1px solid var(--border);border-radius:6px;position:relative;overflow:hidden;transition:all .28s;}
+.stat-item:hover{border-color:rgba(212,245,60,.3);transform:translateY(-3px);}
+.stat-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--accent),transparent);}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:4.5rem;line-height:1;color:var(--accent);}
+.stat-unit{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--accent);}
+.stat-label{font-size:.88rem;font-weight:700;margin:.4rem 0;}
+.stat-note{font-size:.74rem;color:var(--muted);line-height:1.6;}
+.stats-visual{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:4rem;}
+.sv-card{padding:2.5rem;background:var(--card);border:1px solid var(--border);border-radius:6px;}
+.sv-title{font-size:.78rem;font-weight:700;letter-spacing:.06em;margin-bottom:1.8rem;color:var(--muted);}
+.sv-title span{color:var(--text);}
+.bar-chart{display:flex;flex-direction:column;gap:1.2rem;}
+.bar-row{display:grid;grid-template-columns:130px 1fr 40px;align-items:center;gap:.8rem;}
+.bar-label{font-size:.74rem;color:var(--muted);}
+.bar-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;width:0;border-radius:3px;transition:width 1.4s cubic-bezier(.25,.46,.45,.94);}
+.bf-y{background:var(--accent);}
+.bf-o{background:#e8956d;}
+.bf-b{background:#5bafd6;}
+.bf-p{background:#9b7ec8;}
+.bar-pct{font-size:.72rem;color:var(--muted);text-align:right;}
+.gauge-row{display:flex;justify-content:space-around;align-items:center;}
+.gauge{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.gauge svg{transform:rotate(-90deg);}
+.gc-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:7;}
+.gc-fill{fill:none;stroke-width:7;stroke-linecap:round;stroke-dasharray:219.9;stroke-dashoffset:219.9;transition:stroke-dashoffset 1.5s cubic-bezier(.25,.46,.45,.94);}
+.gc-y{stroke:var(--accent);}
+.gc-o{stroke:#e8956d;}
+.gc-b{stroke:#5bafd6;}
+.gauge-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--text);}
+.gauge-lbl{font-size:.66rem;color:var(--muted);text-align:center;}
+.ba-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:1.5rem;align-items:center;margin-bottom:4rem;}
+.ba-card{padding:2.4rem;background:var(--card);border:1px solid var(--border);border-radius:6px;}
+.ba-tag{display:inline-block;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;padding:.32rem .85rem;border-radius:20px;margin-bottom:1.4rem;}
+.ba-before .ba-tag{background:rgba(255,255,255,.06);color:var(--muted);}
+.ba-after .ba-tag{background:rgba(212,245,60,.15);color:var(--accent);}
+.ba-items{display:flex;flex-direction:column;gap:.9rem;}
+.ba-item{display:flex;align-items:center;gap:.9rem;font-size:.82rem;line-height:1.5;}
+.ba-icon{font-size:1rem;width:28px;flex-shrink:0;}
+.ba-arrow{display:flex;align-items:center;justify-content:center;}
+.ba-arrow-inner{width:46px;height:46px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#000;font-weight:700;}
+.impact-graph{margin-bottom:0;}
+.ig-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3.5vw,3rem);margin-bottom:.6rem;}
+.ig-sub{font-size:.78rem;color:var(--muted);margin-bottom:2rem;line-height:1.7;}
+.ig-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.ig-card{padding:2.5rem;background:var(--card);border:1px solid var(--border);border-radius:6px;}
+.ig-card-title{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:1.5rem;}
+.ig-card-title span{color:var(--text);}
+.ig-chart{width:100%;aspect-ratio:320/130;overflow:visible;}
+.ig-chart svg{width:100%;height:100%;display:block;overflow:visible;}
+.ig-line{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;}
+.ig-line-y{stroke:var(--accent);stroke-dasharray:450;stroke-dashoffset:450;transition:stroke-dashoffset 2s ease;}
+.ig-line-y.drawn{stroke-dashoffset:0;}
+.ig-line-g{stroke:rgba(255,255,255,.18);}
+.ig-xlabels{display:flex;justify-content:space-between;padding:0 8px;margin-top:.5rem;}
+.ig-xlabels span{font-size:.68rem;color:var(--muted);}
+.ig-legend{display:flex;gap:1.5rem;margin-top:.8rem;}
+.ig-leg-item{display:flex;align-items:center;gap:.5rem;font-size:.68rem;color:var(--muted);}
+.ig-leg-dot{width:10px;height:10px;border-radius:50%;}
+.ig-leg-y{background:var(--accent);}
+.ig-leg-g{background:rgba(255,255,255,.25);}
+.ig-bars{display:flex;gap:.8rem;align-items:flex-end;height:200px;margin-top:.5rem;}
+.ig-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem;}
+.ig-bar-track{width:100%;height:160px;display:flex;align-items:flex-end;position:relative;}
+.ig-bar-fill{width:100%;border-radius:3px 3px 0 0;transition:height 1.4s cubic-bezier(.25,.46,.45,.94);height:0;position:relative;}
+.ig-bar-fill.no{background:rgba(255,255,255,.12);}
+.ig-bar-fill.yes{background:rgba(212,245,60,.5);}
+.ig-bar-fill.high{background:var(--accent);}
+.ig-bar-val{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:.68rem;font-weight:700;color:rgba(255,255,255,.85);white-space:nowrap;}
+.ig-bar-label{font-size:.6rem;color:var(--muted);text-align:center;line-height:1.4;}
+.quote-block{margin-top:5rem;padding:6rem 2.8rem;background:var(--bg);border-top:1px solid var(--border);position:relative;overflow:hidden;}
+.quote-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(212,245,60,.05) 0%,transparent 70%);pointer-events:none;}
+.quote-eyebrow{font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.8rem;margin-bottom:2.5rem;}
+.quote-eyebrow::before{content:'—';color:var(--accent);}
+.quote-main{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5.5vw,7rem);line-height:.95;letter-spacing:.01em;max-width:1000px;margin-bottom:2.5rem;word-break:keep-all;}
+.q-line{display:block;}
+.q-acc{color:var(--accent);}
+.quote-body{max-width:600px;font-size:.9rem;line-height:2;color:var(--muted);margin-bottom:3rem;}
+.quote-body strong{color:var(--text);font-weight:700;}
+.quote-cta-link{display:inline-flex;align-items:center;gap:.7rem;padding:.95rem 2.6rem;background:var(--accent);color:#000;border-radius:3px;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:all .22s;}
+.quote-cta-link:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow);}
+
+/* ── WHY ── */
+.why-sec{background:var(--surface);}
+.why-wrap{max-width:1240px;margin:0 auto;}
+.why-lead{max-width:660px;margin-bottom:4.5rem;}
+.why-lead p{font-size:.92rem;line-height:1.9;color:var(--muted);}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:4rem;}
+.stat{padding:2.6rem 2rem;background:var(--card);border:1px solid var(--border);border-radius:6px;position:relative;overflow:hidden;transition:all .28s;}
+.stat:hover{border-color:rgba(212,245,60,.3);transform:translateY(-3px);}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--accent),transparent);}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:3.8rem;line-height:1;color:var(--accent);margin-bottom:.6rem;}
+.stat-name{font-size:.82rem;font-weight:700;margin-bottom:.45rem;}
+.stat-desc{font-size:.74rem;line-height:1.7;color:var(--muted);}
+.reasons{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem;}
+.reason{padding:2.2rem;background:var(--card);border:1px solid var(--border);border-radius:6px;display:flex;gap:1.6rem;align-items:flex-start;}
+.reason-n{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;color:rgba(212,245,60,.18);flex-shrink:0;width:52px;}
+.reason-title{font-size:.86rem;font-weight:700;margin-bottom:.5rem;}
+.reason-text{font-size:.78rem;line-height:1.8;color:var(--muted);}
+
+/* ══════════════════════
+   PORTFOLIO — BUTTON NAV
+══════════════════════ */
+#portfolio{position:relative;background:var(--bg);}
+.pf-stage{
+  height:100vh;min-height:550px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  background:var(--bg);overflow:hidden;position:relative;
+}
+.pf-bg{position:absolute;inset:0;pointer-events:none;transition:background 1s ease;}
+.pf-info{padding:0 0 0 5vw;transition:opacity .35s,transform .35s;}
+.pf-info.out{opacity:0;transform:translateX(-18px);}
+.pf-idx{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.pf-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,4.5rem);line-height:1;margin-bottom:.7rem;}
+.pf-cat{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;}
+.pf-desc{font-size:.82rem;line-height:1.8;color:var(--muted);margin-bottom:2rem;max-width:320px;}
+.pf-visit{display:inline-flex;align-items:center;gap:.6rem;padding:.78rem 1.8rem;background:var(--accent);color:#000;border-radius:3px;font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .22s;}
+.pf-visit:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--accent-glow);}
+
+/* Dot indicators */
+.pf-dots{padding:0 5vw 0 0;display:flex;flex-direction:column;gap:.9rem;align-items:center;}
+.pf-dot{width:5px;height:5px;border-radius:50%;border:1px solid rgba(212,245,60,.5);background:transparent;cursor:pointer;transition:all .3s;}
+.pf-dot.on{background:var(--accent);border-color:var(--accent);transform:scale(1.6);}
+
+/* Phone */
+.pf-phone-col{display:flex;flex-direction:column;align-items:center;gap:1.5rem;position:relative;}
+.pf-float{animation:phoneFloat 4.5s ease-in-out infinite;}
+@keyframes phoneFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.pf-phone{width:760px;height:490px;background:linear-gradient(145deg,#2e2e2e,#1c1c1c);border-radius:20px;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 90px rgba(0,0,0,.85),inset 0 0 0 1px rgba(255,255,255,.03);will-change:transform;}
+.pf-phone.is-spinning{animation:phoneSpin .72s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes phoneSpin{0%{transform:perspective(900px) rotateY(0deg);}100%{transform:perspective(900px) rotateY(360deg);}}
+.ph-side-btn{position:absolute;top:-3px;height:3px;border-radius:2px 2px 0 0;background:#252525;}
+.ph-side-btn:nth-child(1){left:70px;width:38px;}
+.ph-side-btn:nth-child(2){left:124px;width:52px;}
+.ph-side-btn:nth-child(3){left:192px;width:52px;}
+.ph-power{position:absolute;right:70px;top:-3px;height:3px;width:48px;background:#252525;border-radius:2px 2px 0 0;}
+.ph-island{position:absolute;top:9px;right:16px;width:8px;height:8px;background:#111;border-radius:50%;border:1px solid rgba(255,255,255,.08);z-index:20;}
+
+.ph-status{position:absolute;top:0;left:0;right:0;height:28px;z-index:15;display:flex;align-items:flex-end;justify-content:space-between;padding:0 14px 4px;pointer-events:none;}
+.ph-time{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.75);letter-spacing:.04em;}
+.ph-icons{font-size:.55rem;color:rgba(255,255,255,.75);display:flex;gap:.3rem;}
+.ph-bar{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:90px;height:3px;background:rgba(255,255,255,.2);border-radius:2px;z-index:20;}
+.ph-screen{position:absolute;top:6px;left:8px;right:8px;bottom:6px;border-radius:12px;overflow:hidden;background:#0a0a0a;}
+.ph-slide{position:absolute;inset:0;display:none;}
+.ph-slide.active{display:block;}
+/* iframe 스케일 뷰 — 1280px 데스크탑을 744px로 스케일다운 */
+.ph-iframe-outer{position:absolute;inset:0;overflow:hidden;background:#fff;}
+.ph-iframe{
+  width:1280px;
+  border:none;
+  transform-origin:top left;
+  pointer-events:auto;
+  /* scale & height set dynamically by JS */
+}
+/* 방문 버튼 */
+.ph-visit-btn{
+  position:absolute;bottom:14px;right:14px;
+  background:var(--accent);color:#0a0a0a;
+  font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:.12em;
+  padding:.38rem 1rem;border-radius:18px;
+  text-decoration:none;z-index:20;
+  opacity:0;transition:opacity .25s;
+  box-shadow:0 4px 14px rgba(0,0,0,.35);
+}
+.ph-slide:hover .ph-visit-btn{opacity:1;}
+
+
+/* 슬라이드 화살표 — 데스크탑: 태블릿 양쪽 / 모바일: 인라인 */
+.pf-nav-row{
+  position:absolute;top:50%;left:-60px;right:-60px;
+  transform:translateY(-50%);
+  display:flex;justify-content:space-between;align-items:center;
+  pointer-events:none;
+}
+.pf-nav-btn{
+  width:44px;height:44px;border-radius:50%;
+  border:1px solid rgba(212,245,60,.4);
+  background:rgba(10,10,10,.75);
+  color:var(--accent);cursor:pointer;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .22s;backdrop-filter:blur(6px);
+  pointer-events:auto;flex-shrink:0;
+}
+.pf-nav-btn:hover:not(:disabled){background:var(--accent);color:#000;border-color:var(--accent);}
+.pf-nav-btn:disabled{opacity:.18;cursor:not-allowed;}
+/* 데스크탑에서 카운터는 info 패널에 있으므로 숨김 */
+.pf-nav-counter-inline{display:none;}
+
+/* Button navigation */
+.pf-counter{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;color:var(--muted);min-width:60px;text-align:center;}
+
+/* ── PROCESS ── */
+.process-sec{background:var(--surface);}
+.process-list{max-width:920px;margin:0 auto;}
+.proc{display:grid;grid-template-columns:72px 1fr;gap:2.2rem;align-items:start;padding:2.5rem 0;border-bottom:1px solid var(--border);}
+.proc:last-child{border-bottom:none;}
+.proc-n{font-family:'Bebas Neue',sans-serif;font-size:3.8rem;line-height:1;color:rgba(212,245,60,.15);}
+.proc-h{font-size:.9rem;font-weight:700;letter-spacing:.03em;margin-bottom:.5rem;}
+.proc-p{font-size:.78rem;line-height:1.82;color:var(--muted);}
+.proc-tag{display:inline-block;margin-top:.8rem;padding:.3rem .85rem;background:rgba(212,245,60,.1);color:var(--accent);border-radius:20px;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+
+/* ── PRICING ── */
+.price-setup{max-width:1100px;margin:0 auto 3rem;padding:2rem 2.5rem;background:var(--card);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:space-between;}
+.price-setup-tier{font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+.price-setup-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3vw,2.8rem);line-height:1;margin-bottom:.3rem;}
+.price-setup-name em{color:var(--accent);font-style:normal;}
+.price-setup-sub{font-size:.72rem;color:var(--muted);}
+.price-setup-btn{padding:.9rem 2.4rem;background:var(--accent);color:#000;border-radius:3px;text-decoration:none;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;transition:all .22s;flex-shrink:0;}
+.price-setup-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow);}
+.price-monthly-label{max-width:1100px;margin:0 auto 1.5rem;font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);}
+.price-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;max-width:1100px;margin:0 auto;}
+.pc{padding:2.6rem;background:var(--card);border:1px solid var(--border);border-radius:6px;position:relative;transition:all .28s;}
+.pc:hover{border-color:rgba(212,245,60,.28);transform:translateY(-4px);}
+.pc.hot{border-color:var(--accent);}
+.pc-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.35rem 1.1rem;border-radius:20px;white-space:nowrap;}
+.pc-plan{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:.9rem;}
+.pc-name{font-size:.88rem;font-weight:700;margin-bottom:.5rem;}
+.pc-price{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;margin-bottom:.3rem;}
+.pc-sub{font-size:.72rem;color:var(--muted);margin-bottom:1.8rem;}
+.pc-div{height:1px;background:var(--border);margin-bottom:1.8rem;}
+.pc-list{list-style:none;display:flex;flex-direction:column;gap:.8rem;margin-bottom:2.2rem;}
+.pc-list li{font-size:.77rem;line-height:1.55;color:var(--muted);padding-left:1.2rem;position:relative;}
+.pc-list li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-size:.68rem;}
+.pc-btn{display:block;text-align:center;padding:.88rem;border-radius:3px;font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .22s;}
+.pc-btn-fill{background:var(--accent);color:#000;}
+.pc-btn-fill:hover{box-shadow:0 6px 24px var(--accent-glow);}
+.pc-btn-ghost{border:1px solid var(--border);color:var(--muted);}
+.pc-btn-ghost:hover{border-color:rgba(212,245,60,.4);color:var(--accent);}
+
+/* ── CONTACT ── */
+.contact-sec{background:var(--surface);}
+.contact-inner{max-width:780px;margin:0 auto;text-align:center;}
+.contact-inner p{font-size:.9rem;line-height:1.9;color:var(--muted);margin-bottom:3rem;}
+.contact-btns{display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;}
+.c-btn{display:inline-flex;align-items:center;gap:.65rem;padding:.92rem 2.2rem;border-radius:3px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:all .22s;}
+.c-kakao{background:#FAE100;color:#3a1c1c;}
+.c-kakao:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(250,225,0,.22);}
+.c-insta{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;}
+.c-insta:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(220,39,67,.22);}
+
+/* ── FOOTER ── */
+footer{padding:3rem 2.8rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;}
+.foot-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;}
+.foot-logo em{color:var(--accent);font-style:normal;}
+.foot-copy{font-size:.7rem;color:var(--muted);}
+.foot-links{display:flex;gap:2rem;list-style:none;}
+.foot-links a{color:var(--muted);text-decoration:none;font-size:.7rem;transition:color .2s;}
+.foot-links a:hover{color:var(--text);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .pf-stage{grid-template-columns:1fr;grid-template-rows:auto;justify-items:center;padding:2rem 1.5rem;overflow:visible;}
+  .pf-info{padding:0;text-align:center;order:2;padding-bottom:1.5rem;}
+  .pf-phone-col{order:1;padding-top:2rem;}
+  .pf-dots{display:none;}
+  /* 모바일: 화살표 인라인으로 전환 */
+  .pf-nav-row{
+    position:static;transform:none;
+    justify-content:center;gap:1.4rem;
+    margin-top:1.1rem;pointer-events:auto;
+  }
+  .pf-nav-counter-inline{display:block;}
+  .about-layout{grid-template-columns:1fr;}.av{display:none;}
+  .ba-grid{grid-template-columns:1fr;}.ba-arrow{display:none;}
+  .ig-wrap{grid-template-columns:1fr;}
+  .stats-visual{grid-template-columns:1fr;}
+}
+@media(max-width:960px){
+  .stat-num-row{grid-template-columns:1fr 1fr;}
+  .stats-row{grid-template-columns:1fr 1fr;}.reasons{grid-template-columns:1fr;}
+  .price-row{grid-template-columns:1fr;}.nav-links{display:none;}
+  .price-setup{flex-direction:column;gap:1.5rem;text-align:center;}
+}
+@media(max-width:640px){
+  .stat-num-row{grid-template-columns:1fr;}
+  .stats-row{grid-template-columns:1fr;}.pillars{grid-template-columns:1fr;}
+  .sec{padding:5rem 1.6rem;}nav{padding:0 1.6rem;}
+  .quote-main{font-size:clamp(1.9rem,7vw,3.2rem);word-break:keep-all;}
+  /* 모바일: 세로 태블릿으로 전환 */
+  .pf-phone{
+    width:min(88vw,420px) !important;
+    height:auto !important;
+    aspect-ratio:3/4 !important;
+  }
+  .pf-stage{padding:1.5rem 1rem !important;}
+  .pf-phone-col{padding-top:1rem !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ INTRO OVERLAY ══ -->
+<div id="introOverlay">
+  <div id="shaderContainer"></div>
+  <div id="introContent">
+    <div class="intro-logo">ON<em>SPOT</em></div>
+    <p class="intro-tag">소상공인의 온라인 첫인상</p>
+    <button id="introStart"><span>START →</span></button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="logo" href="#">ON<em>SPOT</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">소개</a></li>
+    <li><a href="#stats">수치</a></li>
+    <li><a href="#portfolio">포트폴리오</a></li>
+    <li><a href="#pricing">가격</a></li>
+  </ul>
+  <a href="https://pf.kakao.com/_ZBYEX/chat" target="_blank" class="nav-cta">문의하기</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="starCanvas"></canvas>
+  <div class="hero-content" id="heroContent">
+    <p class="hero-tag">소상공인 웹사이트 전문</p>
+    <h1 class="hero-title">
+      <span class="l1">WE</span>
+      <span class="l2">BUILD YOUR</span>
+      <span class="l3">BUSINESS</span>
+      <span class="l4">online.</span>
+    </h1>
+    <p class="hero-sub">단순한 홈페이지가 아닙니다.<br>고객이 연락하게 만드는 페이지, 검색에 노출되는 페이지, 브랜드 신뢰를 만드는 페이지.</p>
+    <div class="hero-actions">
+      <a href="#portfolio" class="btn-fill">포트폴리오 보기</a>
+      <a href="#pricing" class="btn-line">가격 안내</a>
+    </div>
+  </div>
+  <div class="warp-hint" id="warpHint">
+    <div class="warp-hint-line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="tick-item">홈페이지 제작</span><span class="tick-item">랜딩페이지</span>
+    <span class="tick-item">모바일 최적화</span><span class="tick-item">SEO 최적화</span>
+    <span class="tick-item">브랜드 디자인</span><span class="tick-item">카카오 연동</span>
+    <span class="tick-item">인스타 연동</span><span class="tick-item">7일 납품</span>
+    <span class="tick-item">홈페이지 제작</span><span class="tick-item">랜딩페이지</span>
+    <span class="tick-item">모바일 최적화</span><span class="tick-item">SEO 최적화</span>
+    <span class="tick-item">브랜드 디자인</span><span class="tick-item">카카오 연동</span>
+    <span class="tick-item">인스타 연동</span><span class="tick-item">7일 납품</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="sec" id="about">
+  <div class="about-layout">
+    <div class="about-text">
+      <p class="label r">About ONSPOT</p>
+      <h2 class="heading r">온스팟은<br>결과로<br>말합니다</h2>
+      <p class="r">단순히 예쁜 홈페이지가 아닙니다. 방문자가 고객으로 전환되는 페이지, 검색에 제대로 노출되는 페이지, 브랜드 신뢰를 만드는 페이지를 제작합니다.</p>
+      <p class="r">소상공인의 비즈니스를 깊이 이해하고, 그에 맞는 최적의 온라인 전략을 함께 설계합니다. 화려한 기능보다 실질적인 성과에 집중합니다.</p>
+      <div class="pillars r">
+        <div class="pillar"><div class="pillar-icon">⚡</div><div class="pillar-name">빠른 제작</div><div class="pillar-desc">평균 5일 이내 납품. 비즈니스를 빠르게 온라인으로.</div></div>
+        <div class="pillar"><div class="pillar-icon">📱</div><div class="pillar-name">모바일 최적화</div><div class="pillar-desc">스마트폰, 태블릿, PC 모든 기기에서 완벽하게.</div></div>
+        <div class="pillar"><div class="pillar-icon">🔍</div><div class="pillar-name">SEO 포함</div><div class="pillar-desc">네이버·구글 검색 노출 최적화가 기본 포함.</div></div>
+        <div class="pillar"><div class="pillar-icon">💬</div><div class="pillar-name">사후 지원</div><div class="pillar-desc">납품 후 수정 및 운영 지원까지 함께합니다.</div></div>
+      </div>
+    </div>
+    <div class="av r">
+      <div class="av-badge">ONSPOT</div>
+      <div class="av-circle"><div class="av-circle-in">ON<br>SPOT</div></div>
+      <div class="av-nums">
+        <div class="av-num"><div class="av-n">100+</div><div class="av-l">제작 완료</div></div>
+        <div class="av-num"><div class="av-n">95%</div><div class="av-l">만족도</div></div>
+        <div class="av-num"><div class="av-n">5일</div><div class="av-l">평균 납기</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 숫자로 보는 ONSPOT -->
+<section class="sec stats-sec" id="stats">
+  <div class="stats-sec-wrap">
+    <p class="lbl r">Why ONSPOT</p>
+    <h2 class="sh r">숫자로 보는 ONSPOT</h2>
+    <p class="r" style="color:var(--muted);font-size:.9rem;line-height:1.9;max-width:560px;margin-bottom:3rem;">기획부터 배포까지, 빠르고 전문적으로.<br>소상공인의 온라인 첫인상을 바꿉니다.</p>
+    <div class="stat-num-row">
+      <div class="stat-item r"><div><span class="stat-num">100</span><span class="stat-unit">+</span></div><div class="stat-label">완료 프로젝트</div><div class="stat-note">카페·학원·어린이집·복합공간 등<br>다양한 업종에서 실제 배포된 사이트.</div></div>
+      <div class="stat-item r"><div><span class="stat-num">5</span><span class="stat-unit">일</span></div><div class="stat-label">평균 제작 기간</div><div class="stat-note">기획 → 디자인 → 개발 → 배포까지,<br>느리게 기다리지 않아도 됩니다.</div></div>
+      <div class="stat-item r"><div><span class="stat-num">100</span><span class="stat-unit">%</span></div><div class="stat-label">모바일 최적화</div><div class="stat-note">모든 사이트는 스마트폰 기준으로 설계.<br>고객의 91%는 모바일로 검색합니다.</div></div>
+    </div>
+    <div class="stats-visual r">
+      <div class="sv-card">
+        <div class="sv-title">ONSPOT <span>클라이언트 성과 지표</span></div>
+        <div class="bar-chart" id="barChart">
+          <div class="bar-row"><span class="bar-label">검색 노출 증가</span><div class="bar-track"><div class="bar-fill bf-y" data-w="91"></div></div><span class="bar-pct">91%</span></div>
+          <div class="bar-row"><span class="bar-label">모바일 유입</span><div class="bar-track"><div class="bar-fill bf-o" data-w="88"></div></div><span class="bar-pct">88%</span></div>
+          <div class="bar-row"><span class="bar-label">문의 전환율</span><div class="bar-track"><div class="bar-fill bf-b" data-w="74"></div></div><span class="bar-pct">74%</span></div>
+          <div class="bar-row"><span class="bar-label">고객 재방문율</span><div class="bar-track"><div class="bar-fill bf-p" data-w="62"></div></div><span class="bar-pct">62%</span></div>
+        </div>
+      </div>
+      <div class="sv-card">
+        <div class="sv-title">ONSPOT <span>핵심 지표</span></div>
+        <div class="gauge-row" id="gauges">
+          <div class="gauge"><svg width="84" height="84" viewBox="0 0 84 84"><circle class="gc-bg" cx="42" cy="42" r="35"/><circle class="gc-fill gc-y" cx="42" cy="42" r="35" data-pct="95"/></svg><div class="gauge-num">95%</div><div class="gauge-lbl">고객 만족도</div></div>
+          <div class="gauge"><svg width="84" height="84" viewBox="0 0 84 84"><circle class="gc-bg" cx="42" cy="42" r="35"/><circle class="gc-fill gc-o" cx="42" cy="42" r="35" data-pct="100"/></svg><div class="gauge-num">100%</div><div class="gauge-lbl">모바일 최적화</div></div>
+          <div class="gauge"><svg width="84" height="84" viewBox="0 0 84 84"><circle class="gc-bg" cx="42" cy="42" r="35"/><circle class="gc-fill gc-b" cx="42" cy="42" r="35" data-pct="88"/></svg><div class="gauge-num">88%</div><div class="gauge-lbl">SEO 점수</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Before / After -->
+    <div style="margin-top:5rem;" class="r"><p class="lbl">Before / After</p><h3 class="sh" style="font-size:clamp(1.8rem,4vw,3.5rem);margin-bottom:2rem;">웹사이트 유무의 차이</h3></div>
+    <div class="ba-grid r">
+      <div class="ba-card ba-before">
+        <span class="ba-tag">BEFORE — 웹사이트 없을 때</span>
+        <div class="ba-items">
+          <div class="ba-item"><div class="ba-icon">😐</div>검색해도 가게 정보 찾기 어려움</div>
+          <div class="ba-item"><div class="ba-icon">📞</div>전화로만 문의 — 부재 시 기회 손실</div>
+          <div class="ba-item"><div class="ba-icon">📷</div>인스타만으로는 신뢰도 한계</div>
+          <div class="ba-item"><div class="ba-icon">💸</div>광고비 대비 전환율 낮음</div>
+        </div>
+      </div>
+      <div class="ba-arrow"><div class="ba-arrow-inner">→</div></div>
+      <div class="ba-card ba-after">
+        <span class="ba-tag">AFTER — ONSPOT 도입 후</span>
+        <div class="ba-items">
+          <div class="ba-item"><div class="ba-icon">🔍</div>네이버·구글 검색 상위 노출</div>
+          <div class="ba-item"><div class="ba-icon">💬</div>24시간 온라인 문의 자동 연결</div>
+          <div class="ba-item"><div class="ba-icon">🖼️</div>갤러리·리뷰로 방문 전 신뢰 확보</div>
+          <div class="ba-item"><div class="ba-icon">📈</div>홈페이지 = 24시간 영업하는 영업사원</div>
+        </div>
+      </div>
+    </div>
+    <!-- Impact Graph -->
+    <div class="impact-graph r" id="impactGraph" style="margin-top:4rem;">
+      <h3 class="ig-title">웹사이트가 만드는 차이</h3>
+      <p class="ig-sub">랜딩페이지 도입 후 실제 소상공인 클라이언트에서 나타난 평균 변화입니다.</p>
+      <div class="ig-wrap">
+        <div class="ig-card">
+          <div class="ig-card-title">온라인 <span>유입 트래픽 변화</span></div>
+          <div class="ig-chart">
+            <svg viewBox="0 0 320 130" preserveAspectRatio="none">
+              <defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4f53c" stop-opacity="0.18"/><stop offset="100%" stop-color="#d4f53c" stop-opacity="0"/></linearGradient></defs>
+              <line x1="0" y1="26" x2="320" y2="26" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+              <line x1="0" y1="52" x2="320" y2="52" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+              <line x1="0" y1="78" x2="320" y2="78" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+              <line x1="0" y1="104" x2="320" y2="104" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+              <text x="6" y="24" fill="rgba(255,255,255,.2)" font-size="9" font-family="sans-serif">400</text>
+              <text x="6" y="50" fill="rgba(255,255,255,.2)" font-size="9" font-family="sans-serif">300</text>
+              <text x="6" y="76" fill="rgba(255,255,255,.2)" font-size="9" font-family="sans-serif">200</text>
+              <text x="6" y="102" fill="rgba(255,255,255,.2)" font-size="9" font-family="sans-serif">100</text>
+              <polyline class="ig-line ig-line-g" points="30,108 90,106 150,110 210,107 270,109 310,108"/>
+              <polyline class="ig-line ig-line-y" id="lineChart" points="30,108 90,96 150,78 210,52 270,30 310,18"/>
+              <polygon style="fill:url(#areaGrad);opacity:.7;" points="30,108 90,96 150,78 210,52 270,30 310,18 310,130 30,130"/>
+              <circle cx="30" cy="108" r="4" fill="#d4f53c"/>
+              <circle cx="150" cy="78" r="4" fill="#d4f53c"/>
+              <circle cx="310" cy="18" r="5" fill="#d4f53c"/>
+              <line x1="90" y1="10" x2="90" y2="120" stroke="rgba(212,245,60,.3)" stroke-width="1" stroke-dasharray="4 3"/>
+              <text x="93" y="20" fill="rgba(212,245,60,.65)" font-size="8" font-family="sans-serif">ONSPOT 도입</text>
+            </svg>
+          </div>
+          <div class="ig-xlabels"><span>1개월 전</span><span>도입</span><span>1개월</span><span>3개월</span><span>6개월</span></div>
+          <div class="ig-legend"><div class="ig-leg-item"><div class="ig-leg-dot ig-leg-y"></div>웹사이트 있음</div><div class="ig-leg-item"><div class="ig-leg-dot ig-leg-g"></div>웹사이트 없음</div></div>
+        </div>
+        <div class="ig-card">
+          <div class="ig-card-title">채널별 <span>고객 전환율 비교</span></div>
+          <div class="ig-bars" id="igBars">
+            <div class="ig-bar-wrap"><div class="ig-bar-track"><div class="ig-bar-fill no" data-h="22" style="height:0;"><div class="ig-bar-val">22%</div></div></div><div class="ig-bar-label">구전·<br>지인 소개</div></div>
+            <div class="ig-bar-wrap"><div class="ig-bar-track"><div class="ig-bar-fill no" data-h="38" style="height:0;"><div class="ig-bar-val">38%</div></div></div><div class="ig-bar-label">인스타<br>단독</div></div>
+            <div class="ig-bar-wrap"><div class="ig-bar-track"><div class="ig-bar-fill no" data-h="51" style="height:0;"><div class="ig-bar-val">51%</div></div></div><div class="ig-bar-label">네이버<br>플레이스</div></div>
+            <div class="ig-bar-wrap"><div class="ig-bar-track"><div class="ig-bar-fill yes" data-h="78" style="height:0;"><div class="ig-bar-val">78%</div></div></div><div class="ig-bar-label">랜딩페이지<br>+인스타</div></div>
+            <div class="ig-bar-wrap"><div class="ig-bar-track"><div class="ig-bar-fill high" data-h="97" style="height:0;"><div class="ig-bar-val" style="color:#000;">97%</div></div></div><div class="ig-bar-label" style="color:var(--accent);font-weight:600;">ONSPOT<br>+인스타+네이버</div></div>
+          </div>
+          <div style="font-size:.62rem;color:var(--muted);margin-top:.8rem;line-height:1.7;">* ONSPOT 랜딩페이지 도입 시 인스타그램·네이버 플레이스와 연동되어 각 채널 유입도 함께 증가합니다.</div>
+        </div>
+      </div>
+    </div>
+    <!-- Quote Block -->
+    <div class="quote-block r" id="quoteBlock">
+      <div class="quote-eyebrow">THE TRUTH NOBODY TALKS ABOUT</div>
+      <h3 class="quote-main">
+        <span class="q-line">웹사이트 없는 회사,</span>
+        <span class="q-line">믿고 <span class="q-acc">거래하시겠습니까?</span></span>
+        <span class="q-line">가게도 <span class="q-acc">똑같습니다.</span></span>
+      </h3>
+      <p class="quote-body">처음 만나는 브랜드를 검색했는데 홈페이지가 없다면, 고객은 조용히 뒤로 갑니다.<br>광고비를 쓰고, 인스타를 운영하고, 네이버 플레이스를 등록해도 <strong>랜딩페이지 하나 없으면 절반은 그냥 떠납니다.</strong><br>첫인상은 단 한 번입니다. ONSPOT이 그 한 번을 잡아드립니다.</p>
+      <a href="#contact" class="quote-cta-link">지금 시작하기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="sec why-sec" id="why">
+  <div class="why-wrap">
+    <p class="label r">왜 홈페이지가 필요한가</p>
+    <h2 class="heading r">온라인 없는 사업은<br>없는 사업입니다</h2>
+    <div class="why-lead r"><p>고객은 이미 온라인에서 검색하고, 비교하고, 결정합니다. 홈페이지가 없다면 경쟁에서 시작도 하기 전에 지고 있습니다.</p></div>
+    <div class="stats-row">
+      <div class="stat r"><div class="stat-n">76%</div><div class="stat-name">당일 방문 결정</div><div class="stat-desc">모바일 검색 후 24시간 이내에 오프라인 매장을 방문한다고 응답한 비율.</div></div>
+      <div class="stat r"><div class="stat-n">3초</div><div class="stat-name">첫인상 결정 시간</div><div class="stat-desc">방문자가 신뢰도를 판단하는 시간. 3초 안에 신뢰를 주지 못하면 이탈합니다.</div></div>
+      <div class="stat r"><div class="stat-n">58%</div><div class="stat-name">신뢰도 차이</div><div class="stat-desc">홈페이지 없는 사업체는 있는 사업체보다 고객 신뢰도가 최대 58% 낮습니다.</div></div>
+    </div>
+    <div class="reasons">
+      <div class="reason r"><div class="reason-n">01</div><div><div class="reason-title">24시간 일하는 영업 직원</div><div class="reason-text">자는 동안에도, 주말에도, 공휴일에도 고객에게 정보를 전달하고 문의를 받습니다.</div></div></div>
+      <div class="reason r"><div class="reason-n">02</div><div><div class="reason-title">네이버·구글 검색 노출</div><div class="reason-text">SNS만으로는 검색에 노출되지 않습니다. '근처 카페', '강남 필라테스' 검색어에 잡힙니다.</div></div></div>
+      <div class="reason r"><div class="reason-n">03</div><div><div class="reason-title">브랜드 신뢰와 전문성</div><div class="reason-text">정돈된 홈페이지는 전문성을 보여줍니다. 고객은 홈페이지를 보고 '믿을 수 있는 곳'이라고 판단합니다.</div></div></div>
+      <div class="reason r"><div class="reason-n">04</div><div><div class="reason-title">경쟁사와의 명확한 차별화</div><div class="reason-text">홈페이지 품질이 고객 선택에 결정적 영향을 미칩니다. 먼저 시작하는 사람이 이깁니다.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO — 버튼 내비게이션 -->
+<section id="portfolio">
+  <div class="pf-stage" id="pfStage">
+    <div class="pf-bg" id="pfBg"></div>
+    <div class="pf-info" id="pfInfo">
+      <div class="pf-idx" id="pfIdx">01 / 05</div>
+      <div class="pf-name" id="pfName">리더스 어린이집</div>
+      <div class="pf-cat" id="pfCat">어린이집 홈페이지</div>
+      <div class="pf-desc" id="pfDesc">신뢰감 있는 어린이집 홈페이지. 원 소개, 교육 프로그램, 학부모 리뷰.</div>
+      <a href="#" class="pf-visit" id="pfVisit" target="_blank" rel="noopener">사이트 방문 →</a>
+    </div>
+
+    <div class="pf-phone-col">
+      <div class="pf-float">
+        <div class="pf-phone" id="pfPhone">
+          <div class="ph-side-btn"></div><div class="ph-side-btn"></div><div class="ph-side-btn"></div>
+          <div class="ph-power"></div>
+          <div class="ph-island"></div>
+          <div class="ph-status"><div class="ph-time">9:41</div><div class="ph-icons">▲ ◉ ▮▮▮</div></div>
+          <div class="ph-screen" id="pfScreen">
+
+            <!-- SLIDE 01: 리더스 어린이집 -->
+            <div class="ph-slide active" id="slide0">
+              <div class="ph-iframe-outer">
+                <iframe class="ph-iframe" src="https://leaderskids.kr" loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                  title="사이트 미리보기"></iframe>
+              </div>
+              <a class="ph-visit-btn" href="https://leaderskids.kr" target="_blank" rel="noopener">사이트 방문 →</a>
+            </div>
+
+            
+
+            <!-- SLIDE 02: 소리봄음악학원 -->
+            <div class="ph-slide" id="slide1">
+              <div class="ph-iframe-outer">
+                <iframe class="ph-iframe" src="https://soribom.onsecon.workers.dev" loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                  title="사이트 미리보기"></iframe>
+              </div>
+              <a class="ph-visit-btn" href="https://soribom.onsecon.workers.dev" target="_blank" rel="noopener">사이트 방문 →</a>
+            </div>
+
+            
+
+            <!-- SLIDE 03: Wave Café -->
+            <div class="ph-slide" id="slide2">
+              <div class="ph-iframe-outer">
+                <iframe class="ph-iframe" src="https://wavecafe.onsecon.workers.dev/" loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                  title="사이트 미리보기"></iframe>
+              </div>
+              <a class="ph-visit-btn" href="https://wavecafe.onsecon.workers.dev/" target="_blank" rel="noopener">사이트 방문 →</a>
+            </div>
+
+            
+
+            <!-- SLIDE 04: 나만의 서재 -->
+            <div class="ph-slide" id="slide3">
+              <div class="ph-iframe-outer">
+                <iframe class="ph-iframe" src="https://shelf.onsecon.workers.dev" loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                  title="사이트 미리보기"></iframe>
+              </div>
+              <a class="ph-visit-btn" href="https://shelf.onsecon.workers.dev" target="_blank" rel="noopener">사이트 방문 →</a>
+            </div>
+
+            
+
+            <!-- SLIDE 05: Cozy Coffee -->
+            <div class="ph-slide" id="slide4">
+              <div class="ph-iframe-outer">
+                <iframe class="ph-iframe" src="https://cozy.onsecon.workers.dev/" loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                  title="사이트 미리보기"></iframe>
+              </div>
+              <a class="ph-visit-btn" href="https://cozy.onsecon.workers.dev/" target="_blank" rel="noopener">사이트 방문 →</a>
+            </div>
+
+            <!-- SLIDE 06: Dentalstudio Meister Lee -->
+            <div class="ph-slide" id="slide5">
+              <div class="ph-iframe-outer">
+                <iframe class="ph-iframe" src="https://meisterlee.onsecon.workers.dev" loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                  title="사이트 미리보기"></iframe>
+              </div>
+              <a class="ph-visit-btn" href="https://meisterlee.onsecon.workers.dev" target="_blank" rel="noopener">사이트 방문 →</a>
+            </div>
+
+            <!-- SLIDE 07: 킴슈런스 -->
+            <div class="ph-slide" id="slide6">
+              <div class="ph-iframe-outer">
+                <iframe class="ph-iframe" src="https://kimsurance.onsecon.workers.dev" loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                  title="사이트 미리보기"></iframe>
+              </div>
+              <a class="ph-visit-btn" href="https://kimsurance.onsecon.workers.dev" target="_blank" rel="noopener">사이트 방문 →</a>
+            </div>
+
+          </div><!-- /ph-screen -->
+          <div class="ph-bar"></div>
+        </div><!-- /pf-phone -->
+      </div><!-- /pf-float -->
+
+      <!-- 슬라이드 화살표: 데스크탑=양쪽, 모바일=인라인 -->
+      <div class="pf-nav-row">
+        <button class="pf-nav-btn" id="pfPrev" disabled aria-label="이전">&#8592;</button>
+        <span class="pf-nav-counter-inline pf-counter" id="pfCounterMob">01 / 05</span>
+        <button class="pf-nav-btn" id="pfNext" aria-label="다음">&#8594;</button>
+      </div>
+      <span class="pf-counter" id="pfCounter" style="display:none;"></span>
+    </div><!-- /pf-phone-col -->
+
+    <div class="pf-dots">
+      <div class="pf-dot on" data-i="0"></div>
+      <div class="pf-dot" data-i="1"></div>
+      <div class="pf-dot" data-i="2"></div>
+      <div class="pf-dot" data-i="3"></div>
+      <div class="pf-dot" data-i="4"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec process-sec" id="process">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="label r">Process</p>
+    <h2 class="heading r">이렇게<br>만들어집니다</h2>
+    <div class="process-list r">
+      <div class="proc"><div class="proc-n">01</div><div><div class="proc-h">상담 및 기획</div><div class="proc-p">카카오톡 또는 인스타그램으로 연락 주시면, 비즈니스에 대한 이야기를 나누고 최적의 방향을 함께 정합니다.</div><span class="proc-tag">1 — 2일</span></div></div>
+      <div class="proc"><div class="proc-n">02</div><div><div class="proc-h">디자인 설계</div><div class="proc-p">브랜드 컬러, 폰트, 레이아웃을 기획합니다. 기존 SNS나 로고가 있다면 통일감 있게 반영합니다.</div><span class="proc-tag">2 — 3일</span></div></div>
+      <div class="proc"><div class="proc-n">03</div><div><div class="proc-h">개발 및 제작</div><div class="proc-p">확정된 디자인으로 실제 웹사이트를 개발합니다. 모바일, 태블릿, PC 모든 환경에서 최적화됩니다.</div><span class="proc-tag">3 — 5일</span></div></div>
+      <div class="proc"><div class="proc-n">04</div><div><div class="proc-h">검토 · 수정 · 배포</div><div class="proc-p">완성된 페이지를 검토하시고 수정 사항을 말씀해 주세요. 최종 확인 후 도메인 연결과 함께 공개합니다.</div><span class="proc-tag">1 — 2일</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec" id="pricing">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="label r">Pricing</p>
+    <h2 class="heading r">합리적인<br>가격</h2>
+    <div class="price-setup r">
+      <div>
+        <div class="price-setup-tier">SETUP FEE · 1회</div>
+        <div class="price-setup-name">랜딩페이지 제작 <em>59만원</em></div>
+        <div class="price-setup-sub">제작 + 도메인 연결 + 초기 세팅 · 1회 결제</div>
+        <div style="margin-top:12px;display:inline-flex;align-items:center;gap:12px;background:rgba(212,245,60,0.10);border:1.5px solid var(--accent);border-radius:8px;padding:10px 18px;">
+          <span style="font-size:.72rem;color:var(--accent);font-weight:800;letter-spacing:.06em;text-transform:uppercase;">🎉 런칭 한정 · 선착순 20개사</span>
+          <span style="font-size:1.25rem;font-weight:900;color:#fff;">34만원</span>
+          <span style="font-size:.85rem;color:#666;text-decoration:line-through;">59만원</span>
+        </div>
+      </div>
+      <a href="https://pf.kakao.com/_ZBYEX/chat" target="_blank" class="price-setup-btn">제작 문의 →</a>
+    </div>
+    <div class="price-monthly-label r">MONTHLY PLAN · 셋업 후 선택</div>
+    <div class="price-row">
+      <div class="pc r">
+        <div class="pc-plan">Basic</div><div class="pc-name">베이직</div>
+        <div class="pc-price">5.9<span style="font-size:1.1rem;font-family:'Noto Sans KR'">만원</span></div>
+        <div class="pc-sub">/ 월</div><div class="pc-div"></div>
+        <ul class="pc-list"><li>호스팅·도메인 유지</li><li>월 수정 1회</li><li>수정 범위: 텍스트·이미지 교체</li><li>카카오톡 / 전화 응대</li></ul>
+        <a href="https://pf.kakao.com/_ZBYEX/chat" target="_blank" class="pc-btn pc-btn-ghost">문의하기</a>
+      </div>
+      <div class="pc hot r">
+        <div class="pc-badge">POPULAR</div>
+        <div class="pc-plan">Standard</div><div class="pc-name">스탠다드</div>
+        <div class="pc-price">11.9<span style="font-size:1.1rem;font-family:'Noto Sans KR'">만원</span></div>
+        <div class="pc-sub">/ 월</div><div class="pc-div"></div>
+        <ul class="pc-list"><li>호스팅·도메인 유지</li><li>월 수정 3회</li><li>섹션 추가·레이아웃 변경 포함</li><li>카카오톡 / 전화 응대</li><li>월간 성과 리포트</li></ul>
+        <a href="https://pf.kakao.com/_ZBYEX/chat" target="_blank" class="pc-btn pc-btn-fill">문의하기</a>
+      </div>
+      <div class="pc r">
+        <div class="pc-plan">Premium</div><div class="pc-name">프리미엄</div>
+        <div class="pc-price">22.9<span style="font-size:1.1rem;font-family:'Noto Sans KR'">만원</span></div>
+        <div class="pc-sub">/ 월</div><div class="pc-div"></div>
+        <ul class="pc-list"><li>디자인 리뉴얼·신규 섹션 포함</li><li>월 수정 10회</li><li>카카오톡 / 전화 응대 확대</li><li>월간 성과 리포트</li><li>분기 리디자인 1회</li></ul>
+        <a href="https://pf.kakao.com/_ZBYEX/chat" target="_blank" class="pc-btn pc-btn-ghost">문의하기</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec contact-sec" id="contact">
+  <div class="contact-inner">
+    <p class="label r" style="justify-content:center;">Contact</p>
+    <h2 class="heading r" style="text-align:center;">지금 시작하세요</h2>
+    <p class="r">5분 상담으로 내 사업에 맞는 홈페이지가 어떤 모습일지 확인해 보세요.<br>부담 없이 연락 주시면 빠르게 답변드립니다.</p>
+    <div class="contact-btns r">
+      <a href="https://pf.kakao.com/_ZBYEX/chat" target="_blank" class="c-btn c-kakao">💬 카카오톡으로 문의</a>
+      <a href="https://www.instagram.com/pageonspot" target="_blank" class="c-btn c-insta">📷 인스타그램 DM</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">ON<em>SPOT</em></div>
+  <span class="foot-copy">© 2025 ONSPOT &nbsp;·&nbsp; 소상공인 웹사이트 전문</span>
+  <ul class="foot-links">
+    <li><a href="https://www.instagram.com/pageonspot" target="_blank">Instagram</a></li>
+    <li><a href="https://pf.kakao.com/_ZBYEX/chat" target="_blank">KakaoTalk</a></li>
+  </ul>
+</footer>
+
+<script>
+/* ══ SCROLL REVEAL ══ */
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}});},{threshold:.08});
+document.querySelectorAll('.r').forEach(el=>revObs.observe(el));
+
+/* ══ INTRO SHADER (Three.js WebGL) ══ */
+(function(){
+  const overlay=document.getElementById('introOverlay');
+  const icontent=document.getElementById('introContent');
+  const btn=document.getElementById('introStart');
+  const container=document.getElementById('shaderContainer');
+  if(!container||typeof THREE==='undefined'){
+    document.body.style.overflow='hidden';
+    btn.addEventListener('click',()=>{btn.disabled=true;icontent.classList.add('hide');setTimeout(()=>{overlay.style.opacity='0';},200);setTimeout(()=>{overlay.style.display='none';document.body.style.overflow='';document.getElementById('mainNav').classList.add('show');document.getElementById('heroContent').classList.add('show');document.getElementById('warpHint').classList.add('show');},1200);});
+    return;
+  }
+  const camera=new THREE.Camera();camera.position.z=1;
+  const scene=new THREE.Scene();
+  const uniforms={time:{type:'f',value:1.0},resolution:{type:'v2',value:new THREE.Vector2()}};
+  const material=new THREE.ShaderMaterial({
+    uniforms,
+    vertexShader:`void main(){gl_Position=vec4(position,1.0);}`,
+    fragmentShader:`
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      void main(void){
+        vec2 uv=(gl_FragCoord.xy*2.0-resolution.xy)/min(resolution.x,resolution.y);
+        float t=time*0.05;
+        float lineWidth=0.002;
+        vec3 color=vec3(0.0);
+        for(int j=0;j<3;j++){
+          for(int i=0;i<5;i++){
+            color[j]+=lineWidth*float(i*i)/abs(fract(t-0.01*float(j)+float(i)*0.01)*5.0-length(uv)+mod(uv.x+uv.y,0.2));
+          }
+        }
+        gl_FragColor=vec4(color[0],color[1],color[2],1.0);
+      }
+    `
+  });
+  const geometry=new THREE.PlaneGeometry(2,2);
+  scene.add(new THREE.Mesh(geometry,material));
+  const renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  container.appendChild(renderer.domElement);
+  function resize(){const w=container.clientWidth||window.innerWidth;const h=container.clientHeight||window.innerHeight;renderer.setSize(w,h);uniforms.resolution.value.set(renderer.domElement.width,renderer.domElement.height);}
+  resize();window.addEventListener('resize',resize);
+  let animId;
+  function animate(){animId=requestAnimationFrame(animate);uniforms.time.value+=0.05;renderer.render(scene,camera);}
+  animate();
+  btn.addEventListener('click',()=>{
+    btn.disabled=true;icontent.classList.add('hide');
+    setTimeout(()=>{overlay.style.transition='opacity 1s ease';overlay.style.opacity='0';},200);
+    setTimeout(()=>{cancelAnimationFrame(animId);overlay.style.display='none';document.body.style.overflow='';renderer.dispose();geometry.dispose();material.dispose();document.getElementById('mainNav').classList.add('show');document.getElementById('heroContent').classList.add('show');document.getElementById('warpHint').classList.add('show');},1200);
+  });
+  document.body.style.overflow='hidden';
+})();
+
+/* ══ HERO STAR CANVAS ══ */
+(function(){
+  const canvas=document.getElementById('starCanvas');
+  const ctx=canvas.getContext('2d');
+  const N=180;let W,H,stars=[],speed=0.0025,tgt=0.0025;
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  for(let i=0;i<N;i++)stars.push({x:(Math.random()-.5)*2,y:(Math.random()-.5)*2,z:Math.random(),pz:0});
+  function draw(){
+    speed+=(tgt-speed)*.06;
+    ctx.fillStyle=`rgba(8,8,8,${speed>.012?.12:.25})`;ctx.fillRect(0,0,W,H);
+    const cx=W/2,cy=H/2,iw=speed>.01;
+    stars.forEach(s=>{
+      s.pz=s.z;s.z-=speed;
+      if(s.z<=.001){s.x=(Math.random()-.5)*2;s.y=(Math.random()-.5)*2;s.z=1;s.pz=1;return;}
+      const sx=(s.x/s.z)*W*.55+cx,sy=(s.y/s.z)*H*.55+cy,psx=(s.x/s.pz)*W*.55+cx,psy=(s.y/s.pz)*H*.55+cy,b=1-s.z,r=Math.max(.4,b*2.5);
+      if(iw){const g=ctx.createLinearGradient(psx,psy,sx,sy);g.addColorStop(0,'rgba(212,245,60,0)');g.addColorStop(1,`rgba(220,255,180,${b*.9})`);ctx.strokeStyle=g;ctx.lineWidth=r*.6;ctx.beginPath();ctx.moveTo(psx,psy);ctx.lineTo(sx,sy);ctx.stroke();}
+      else{ctx.fillStyle=`rgba(255,255,255,${b*.85})`;ctx.beginPath();ctx.arc(sx,sy,r*.5,0,Math.PI*2);ctx.fill();}
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  const hero=document.getElementById('hero');
+  window.addEventListener('scroll',()=>{
+    const p=Math.min(window.scrollY/hero.offsetHeight,1);
+    tgt=0.0025+Math.pow(p,2.5)*.065;
+    const hc=document.getElementById('heroContent');
+    if(hc)hc.style.opacity=Math.max(0,1-p*2.2);
+    const wh=document.getElementById('warpHint');
+    if(wh)wh.style.opacity=Math.max(0,1-p*3);
+  },{passive:true});
+})();
+
+/* ══ BAR CHART ══ */
+const barObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.bar-fill').forEach(b=>b.style.width=b.dataset.w+'%');barObs.unobserve(e.target);}});},{threshold:.3});
+const bc=document.getElementById('barChart');if(bc)barObs.observe(bc);
+
+/* ══ GAUGE ══ */
+const gaugeObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.gc-fill').forEach(c=>{c.style.strokeDashoffset=219.9*(1-parseFloat(c.dataset.pct)/100);});gaugeObs.unobserve(e.target);}});},{threshold:.4});
+const gg=document.getElementById('gauges');if(gg)gaugeObs.observe(gg);
+
+/* ══ LINE CHART ══ */
+const lineObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const l=document.getElementById('lineChart');if(l){l.style.transition='stroke-dashoffset 2s ease';l.style.strokeDashoffset='0';}lineObs.unobserve(e.target);}});},{threshold:.3});
+const ig=document.getElementById('impactGraph');if(ig)lineObs.observe(ig);
+
+/* ══ VERTICAL BARS ══ */
+const vbarObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.ig-bar-fill').forEach(b=>b.style.height=b.dataset.h+'%');vbarObs.unobserve(e.target);}});},{threshold:.3});
+const vb=document.getElementById('igBars');if(vb)vbarObs.observe(vb);
+
+/* ══ PORTFOLIO — BUTTON NAVIGATION ══ */
+const PF=[
+  {idx:'01 / 07',name:'리더스 어린이집',cat:'어린이집 홈페이지',desc:'신뢰감 있는 어린이집 홈페이지. 원 소개, 교육 프로그램, 학부모 리뷰.',url:'https://leaderskids.kr',color:'#5db85c',glow:'rgba(93,184,92,.08)'},
+  {idx:'02 / 07',name:'소리봄음악학원',cat:'음악학원 홈페이지',desc:'활기찬 음악학원 사이트. 수업 안내, 강사 소개, 온라인 상담 연동.',url:'https://soribom.onsecon.workers.dev',color:'#e01878',glow:'rgba(224,24,120,.08)'},
+  {idx:'03 / 07',name:'Wave Café',cat:'카페 홈페이지',desc:'감각적인 파도 테마의 카페 웹사이트. 메뉴, 위치, 예약 정보를 한눈에.',url:'https://wavecafe.onsecon.workers.dev/',color:'#e8956d',glow:'rgba(232,149,109,.08)'},
+  {idx:'04 / 07',name:'나만의 서재',cat:'독립서점 홈페이지',desc:'감성적인 독립서점 홈페이지. 신간 소개, 이벤트, 위치 정보 제공.',url:'https://shelf.onsecon.workers.dev',color:'#9b7ec8',glow:'rgba(155,126,200,.08)'},
+  {idx:'05 / 07',name:'Cozy Coffee',cat:'커피숍 홈페이지',desc:'아늑한 분위기의 커피숍 사이트. 메뉴판과 매장 정보를 깔끔하게.',url:'https://cozy.onsecon.workers.dev/',color:'#7bb86f',glow:'rgba(123,184,111,.08)'},
+  {idx:'06 / 07',name:'Dentalstudio Meister Lee',cat:'치과기공소 홈페이지',desc:'마이스터 인증 치과기공소 공식 사이트. 21년 경력, 카롤리눔 파트너.',url:'https://meisterlee.onsecon.workers.dev',color:'#c8b89a',glow:'rgba(200,184,154,.08)'},
+  {idx:'07 / 07',name:'킴슈런스',cat:'보험 컨설턴트 홈페이지',desc:'신뢰 기반 보험 컨설턴트 홈페이지. 상담 예약과 서비스 안내.',url:'https://kimsurance.onsecon.workers.dev',color:'#6aabdc',glow:'rgba(106,171,220,.08)'}
+];
+const N5=PF.length;/* 07 total */
+let activeIdx=0,isAnim=false;
+const pfPhone=document.getElementById('pfPhone');
+const pfInfo=document.getElementById('pfInfo');
+const pfBg=document.getElementById('pfBg');
+const pfPrev=document.getElementById('pfPrev');
+const pfNext=document.getElementById('pfNext');
+const pfCounter=document.getElementById('pfCounter');
+const pfCounterMob=document.getElementById('pfCounterMob');
+
+
+function applyInfo(i){
+  const p=PF[i];
+  document.getElementById('pfIdx').textContent=p.idx;
+  document.getElementById('pfName').textContent=p.name;
+  document.getElementById('pfName').style.color=p.color;
+  document.getElementById('pfCat').textContent=p.cat;
+  document.getElementById('pfDesc').textContent=p.desc;
+  const v=document.getElementById('pfVisit');v.href=p.url;v.style.background=p.color;
+  if(pfCounter)pfCounter.textContent=p.idx;
+  if(pfCounterMob)pfCounterMob.textContent=p.idx;
+  pfPrev.disabled=(i===0);
+  pfNext.disabled=(i===N5-1);
+}
+function applyTheme(i){
+  pfBg.style.background=`radial-gradient(ellipse 65% 65% at 50% 50%,${PF[i].glow} 0%,transparent 70%)`;
+  document.querySelectorAll('.pf-dot').forEach((d,j)=>d.classList.toggle('on',j===i));
+}
+function swapSlide(i){
+  document.querySelectorAll('.ph-slide').forEach((s,j)=>s.classList.toggle('active',j===i));
+}
+function switchTo(ni){
+  if(isAnim||ni===activeIdx)return;isAnim=true;
+  pfInfo.classList.add('out');
+  pfPhone.classList.add('is-spinning');
+  setTimeout(()=>{swapSlide(ni);applyTheme(ni);},360);
+  setTimeout(()=>{pfPhone.classList.remove('is-spinning');pfInfo.classList.remove('out');applyInfo(ni);activeIdx=ni;isAnim=false;},720);
+}
+
+// Init
+applyInfo(0);applyTheme(0);
+
+// Button navigation
+pfPrev.addEventListener('click',()=>{if(!isAnim&&activeIdx>0) switchTo(activeIdx-1);});
+pfNext.addEventListener('click',()=>{if(!isAnim&&activeIdx<N5-1) switchTo(activeIdx+1);});
+
+// Dot click
+document.querySelectorAll('.pf-dot').forEach(dot=>{
+  dot.addEventListener('click',()=>{const i=parseInt(dot.dataset.i,10);if(!isAnim&&i!==activeIdx)switchTo(i);});
+});
+
+// Keyboard navigation
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){if(!isAnim&&activeIdx<N5-1)switchTo(activeIdx+1);}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){if(!isAnim&&activeIdx>0)switchTo(activeIdx-1);}
+});
+/* ── DYNAMIC IFRAME SCALE — 화면 크기에 맞게 자동 조절 ── */
+(function(){
+  function scaleIframes(){
+    var screen = document.getElementById('pfScreen');
+    if(!screen) return;
+    var w = screen.offsetWidth;
+    var h = screen.offsetHeight;
+    if(w < 20 || h < 20) return;
+    var scale = w / 1280;
+    var iH = Math.ceil(h / scale);
+    document.querySelectorAll('.ph-iframe').forEach(function(f){
+      f.style.transform = 'scale(' + scale + ')';
+      f.style.height = iH + 'px';
+    });
+  }
+  ['DOMContentLoaded','load'].forEach(function(ev){
+    window.addEventListener(ev, scaleIframes);
+  });
+  window.addEventListener('resize', scaleIframes);
+  /* layout settle 후 재계산 */
+  setTimeout(scaleIframes, 80);
+  setTimeout(scaleIframes, 400);
+  setTimeout(scaleIframes, 1000);
+})();
+
+</script>
+</body>
+</html>
