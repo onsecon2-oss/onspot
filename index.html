@@ -647,10 +647,20 @@ footer{padding:3rem 2.8rem;border-top:1px solid var(--border);display:flex;align
               <a class="ph-visit-btn" href="https://leaderskids.kr" target="_blank" rel="noopener">사이트 방문 →</a>
             </div>
 
+            <!-- SLIDE 02: MIGA BANG -->
+            <div class="ph-slide" id="slide1">
+              <div class="ph-iframe-outer">
+                <iframe class="ph-iframe" src="https://onsecon2-oss.github.io/miga-bang/" loading="lazy"
+                  sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                  title="사이트 미리보기"></iframe>
+              </div>
+              <a class="ph-visit-btn" href="https://onsecon2-oss.github.io/miga-bang/" target="_blank" rel="noopener">사이트 방문 →</a>
+            </div>
+
             
 
-            <!-- SLIDE 02: 소리봄음악학원 -->
-            <div class="ph-slide" id="slide1">
+            <!-- SLIDE 03: 소리봄음악학원 -->
+            <div class="ph-slide" id="slide2">
               <div class="ph-iframe-outer">
                 <iframe class="ph-iframe" src="https://soribom.onsecon.workers.dev" loading="lazy"
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
@@ -661,8 +671,8 @@ footer{padding:3rem 2.8rem;border-top:1px solid var(--border);display:flex;align
 
             
 
-            <!-- SLIDE 03: Wave Café -->
-            <div class="ph-slide" id="slide2">
+            <!-- SLIDE 04: Wave Café -->
+            <div class="ph-slide" id="slide3">
               <div class="ph-iframe-outer">
                 <iframe class="ph-iframe" src="https://wavecafe.onsecon.workers.dev/" loading="lazy"
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
@@ -673,8 +683,8 @@ footer{padding:3rem 2.8rem;border-top:1px solid var(--border);display:flex;align
 
             
 
-            <!-- SLIDE 04: 나만의 서재 -->
-            <div class="ph-slide" id="slide3">
+            <!-- SLIDE 05: 나만의 서재 -->
+            <div class="ph-slide" id="slide4">
               <div class="ph-iframe-outer">
                 <iframe class="ph-iframe" src="https://shelf.onsecon.workers.dev" loading="lazy"
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
@@ -685,8 +695,8 @@ footer{padding:3rem 2.8rem;border-top:1px solid var(--border);display:flex;align
 
             
 
-            <!-- SLIDE 05: Cozy Coffee -->
-            <div class="ph-slide" id="slide4">
+            <!-- SLIDE 06: Cozy Coffee -->
+            <div class="ph-slide" id="slide5">
               <div class="ph-iframe-outer">
                 <iframe class="ph-iframe" src="https://cozy.onsecon.workers.dev/" loading="lazy"
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
@@ -695,8 +705,8 @@ footer{padding:3rem 2.8rem;border-top:1px solid var(--border);display:flex;align
               <a class="ph-visit-btn" href="https://cozy.onsecon.workers.dev/" target="_blank" rel="noopener">사이트 방문 →</a>
             </div>
 
-            <!-- SLIDE 06: Dentalstudio Meister Lee -->
-            <div class="ph-slide" id="slide5">
+            <!-- SLIDE 07: Dentalstudio Meister Lee -->
+            <div class="ph-slide" id="slide6">
               <div class="ph-iframe-outer">
                 <iframe class="ph-iframe" src="https://meisterlee.onsecon.workers.dev" loading="lazy"
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
@@ -705,8 +715,8 @@ footer{padding:3rem 2.8rem;border-top:1px solid var(--border);display:flex;align
               <a class="ph-visit-btn" href="https://meisterlee.onsecon.workers.dev" target="_blank" rel="noopener">사이트 방문 →</a>
             </div>
 
-            <!-- SLIDE 07: 킴슈런스 -->
-            <div class="ph-slide" id="slide6">
+            <!-- SLIDE 08: 킴슈런스 -->
+            <div class="ph-slide" id="slide7">
               <div class="ph-iframe-outer">
                 <iframe class="ph-iframe" src="https://kimsurance.onsecon.workers.dev" loading="lazy"
                   sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
@@ -735,6 +745,9 @@ footer{padding:3rem 2.8rem;border-top:1px solid var(--border);display:flex;align
       <div class="pf-dot" data-i="2"></div>
       <div class="pf-dot" data-i="3"></div>
       <div class="pf-dot" data-i="4"></div>
+      <div class="pf-dot" data-i="5"></div>
+      <div class="pf-dot" data-i="6"></div>
+      <div class="pf-dot" data-i="7"></div>
     </div>
   </div>
 </section>
@@ -931,15 +944,16 @@ const vb=document.getElementById('igBars');if(vb)vbarObs.observe(vb);
 
 /* ══ PORTFOLIO — BUTTON NAVIGATION ══ */
 const PF=[
-  {idx:'01 / 07',name:'리더스 어린이집',cat:'어린이집 홈페이지',desc:'신뢰감 있는 어린이집 홈페이지. 원 소개, 교육 프로그램, 학부모 리뷰.',url:'https://leaderskids.kr',color:'#5db85c',glow:'rgba(93,184,92,.08)'},
-  {idx:'02 / 07',name:'소리봄음악학원',cat:'음악학원 홈페이지',desc:'활기찬 음악학원 사이트. 수업 안내, 강사 소개, 온라인 상담 연동.',url:'https://soribom.onsecon.workers.dev',color:'#e01878',glow:'rgba(224,24,120,.08)'},
-  {idx:'03 / 07',name:'Wave Café',cat:'카페 홈페이지',desc:'감각적인 파도 테마의 카페 웹사이트. 메뉴, 위치, 예약 정보를 한눈에.',url:'https://wavecafe.onsecon.workers.dev/',color:'#e8956d',glow:'rgba(232,149,109,.08)'},
-  {idx:'04 / 07',name:'나만의 서재',cat:'독립서점 홈페이지',desc:'감성적인 독립서점 홈페이지. 신간 소개, 이벤트, 위치 정보 제공.',url:'https://shelf.onsecon.workers.dev',color:'#9b7ec8',glow:'rgba(155,126,200,.08)'},
-  {idx:'05 / 07',name:'Cozy Coffee',cat:'커피숍 홈페이지',desc:'아늑한 분위기의 커피숍 사이트. 메뉴판과 매장 정보를 깔끔하게.',url:'https://cozy.onsecon.workers.dev/',color:'#7bb86f',glow:'rgba(123,184,111,.08)'},
-  {idx:'06 / 07',name:'Dentalstudio Meister Lee',cat:'치과기공소 홈페이지',desc:'마이스터 인증 치과기공소 공식 사이트. 21년 경력, 카롤리눔 파트너.',url:'https://meisterlee.onsecon.workers.dev',color:'#c8b89a',glow:'rgba(200,184,154,.08)'},
-  {idx:'07 / 07',name:'킴슈런스',cat:'보험 컨설턴트 홈페이지',desc:'신뢰 기반 보험 컨설턴트 홈페이지. 상담 예약과 서비스 안내.',url:'https://kimsurance.onsecon.workers.dev',color:'#6aabdc',glow:'rgba(106,171,220,.08)'}
+  {idx:'01 / 08',name:'리더스 어린이집',cat:'어린이집 홈페이지',desc:'신뢰감 있는 어린이집 홈페이지. 원 소개, 교육 프로그램, 학부모 리뷰.',url:'https://leaderskids.kr',color:'#5db85c',glow:'rgba(93,184,92,.08)'},
+  {idx:'02 / 08',name:'MIGA BANG',cat:'바이올리니스트 포트폴리오',desc:'전문 바이올리니스트 미가 방의 인트로 스플래시와 정적 히어로로 구성된 아티스트 포트폴리오 사이트.',url:'https://onsecon2-oss.github.io/miga-bang/',color:'#d4af37',glow:'rgba(212,175,55,.08)'},
+  {idx:'03 / 08',name:'소리봄음악학원',cat:'음악학원 홈페이지',desc:'활기찬 음악학원 사이트. 수업 안내, 강사 소개, 온라인 상담 연동.',url:'https://soribom.onsecon.workers.dev',color:'#e01878',glow:'rgba(224,24,120,.08)'},
+  {idx:'04 / 08',name:'Wave Café',cat:'카페 홈페이지',desc:'감각적인 파도 테마의 카페 웹사이트. 메뉴, 위치, 예약 정보를 한눈에.',url:'https://wavecafe.onsecon.workers.dev/',color:'#e8956d',glow:'rgba(232,149,109,.08)'},
+  {idx:'05 / 08',name:'나만의 서재',cat:'독립서점 홈페이지',desc:'감성적인 독립서점 홈페이지. 신간 소개, 이벤트, 위치 정보 제공.',url:'https://shelf.onsecon.workers.dev',color:'#9b7ec8',glow:'rgba(155,126,200,.08)'},
+  {idx:'06 / 08',name:'Cozy Coffee',cat:'커피숍 홈페이지',desc:'아늑한 분위기의 커피숍 사이트. 메뉴판과 매장 정보를 깔끔하게.',url:'https://cozy.onsecon.workers.dev/',color:'#7bb86f',glow:'rgba(123,184,111,.08)'},
+  {idx:'07 / 08',name:'Dentalstudio Meister Lee',cat:'치과기공소 홈페이지',desc:'마이스터 인증 치과기공소 공식 사이트. 21년 경력, 카롤리눔 파트너.',url:'https://meisterlee.onsecon.workers.dev',color:'#c8b89a',glow:'rgba(200,184,154,.08)'},
+  {idx:'08 / 08',name:'킴슈런스',cat:'보험 컨설턴트 홈페이지',desc:'신뢰 기반 보험 컨설턴트 홈페이지. 상담 예약과 서비스 안내.',url:'https://kimsurance.onsecon.workers.dev',color:'#6aabdc',glow:'rgba(106,171,220,.08)'}
 ];
-const N5=PF.length;/* 07 total */
+const N5=PF.length;/* 08 total */
 let activeIdx=0,isAnim=false;
 const pfPhone=document.getElementById('pfPhone');
 const pfInfo=document.getElementById('pfInfo');
